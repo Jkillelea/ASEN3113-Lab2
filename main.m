@@ -2,7 +2,7 @@ clear;
 clc;
 close all;
 
-mkdir('./graphs'); % will generate a harmless warning if directory already exists
+[~, ~, ~] = mkdir('./graphs');
 
 % can't use strings here, gotta do these weird literals? (Bare words, in other languages. Really weird)
 load data/28V_200mA_10DegC_Aluminum.txt; % -> variable named X28V_200mA_10DegC_Aluminum
@@ -30,7 +30,7 @@ for i = 1:length(data_sets)
   data  = data_sets{i};
   name  = data_names{i};
   alpha = alphas(i);
-  x     = 2.54.*[1:0.5:4.5]; % locations of the thermocouples (cm)
+  x     = 2.54.*(1:0.5:4.5); % locations of the thermocouples (cm)
 
   % Time (sec)	TC 1 - Near Chiller	TC 2	TC 3	TC 4	TC 5	TC 6	TC 7	TC 8 - Near Heater
   t  = data(end, 1);
@@ -41,8 +41,8 @@ for i = 1:length(data_sets)
   m  = p(1);
   b  = p(2);
   x0 = (T0 - b)/m; % cm
-  x  = x - x0; % offset by x0
-  H  = m*100; % convert to degC / m
+  x  = x - x0;     % offset by x0
+  H  = m*100;      % convert to degC / m
   L  = max(x)/100; % meters
 
   fprintf('%s: H = %.2f deg C/m, %.2f cm to first thermocouple\n', name, H, x(1));
