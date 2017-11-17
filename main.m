@@ -83,16 +83,3 @@ for i = 1:length(data_sets)
   p = polyfit(x, tc(1, :), 1);
   fprintf('\tslope %.2f deg C / cm at initial time. Max difference %.2f deg C.\n', p(1), max(tc(1, :)) - min(tc(1, :)));
 end
-
-% % plot how alpha changes things (for steel)
-% time   = linspace(1, 10090, 1000); % seconds
-% x      = 4; % cm
-% alphas = [alpha*0.5, alpha, alpha*2];
-% figure; hold on; grid on;
-% for alpha = alphas
-%   plot(time, u(x/100, time, b, lambda, alpha, H, T0, 10))
-% end
-% legend('0.5\alpha', '\alpha', '2\alpha', 'location', 'southeast')
-% xlabel('time, seconds')
-% ylabel('temperature, degrees C');
-% title(sprintf('%s - temperature at x = %d cm over time', name, x))
