@@ -33,7 +33,7 @@ for i = 1:length(data_sets)
   x     = 2.54.*[1:0.5:4.5]; % locations of the thermocouples (cm)
 
   % Time (sec)	TC 1 - Near Chiller	TC 2	TC 3	TC 4	TC 5	TC 6	TC 7	TC 8 - Near Heater
-  t = data(end, 1);
+  t  = data(end, 1);
   tc = data(end, 2:end);
 
   % Linear fit for steady state condition
@@ -41,32 +41,32 @@ for i = 1:length(data_sets)
   m  = p(1);
   b  = p(2);
   x0 = (T0 - b)/m; % cm
-  x = x - x0; % offset by x0
-  H = m*100; % convert to degC / m
-  L = max(x)/100; % convert to meters
+  x  = x - x0; % offset by x0
+  H  = m*100; % convert to degC / m
+  L  = max(x)/100; % meters
 
   fprintf('%s: H = %.2f deg C/m, %.2f cm to first thermocouple\n', name, H, x(1));
 
-  % analyitical vs experimental steady state
+  % analyitical vs experimental steady state plots
   figure; hold on; grid on;
   b      = @(n) 8*H*L./(((2*n - 1)^2) * pi^2 )*(-1)^n;
   lambda = @(n) pi*(2*n - 1)/(2*L);
   xrange = linspace(0, L, 100);
-  temps  = u(xrange, t, b, lambda, alpha, H, T0, 10); % 10 forier terms
-  plot(xrange*100, temps, ...
+  temps  = u(xrange, t, b, lambda, alpha, H, T0, 10); % 10 Fourier terms
+  plot(xrange*100, temps, ... % convert xrange to cm
         'DisplayName', 'analyitical steady-state', 'linewidth', 2);
   plot(x, tc, ...
         'DisplayName', 'experimental steady-state');
   scatter(x, tc, 'r*', ...
         'DisplayName', 'thermocouples');
   title(name)
-  xlabel('Distance from X0');
+  xlabel('Distance from X0 (cm)');
   ylabel('Temperature (C)');
   legend('show', 'location', 'southeast')
-  print(['graphs/', name], '-dpng')
+  print(['graphs/', name, '.png'], '-dpng')
 
   % each thermocouple over time
-  t = data(:, 1);
+  t  = data(:, 1);
   tc = data(:, 2:end);
   figure; hold on; grid on;
   for thermocouple = 1:8
@@ -77,10 +77,22 @@ for i = 1:length(data_sets)
   title(sprintf('%s: red = experimental, blue = analyitical', name));
   xlabel('Time (seconds)');
   ylabel('Temperature (C)');
-  print(['graphs/', name, ' thermocouples'], '-dpng');
+  print(['graphs/', name, ' thermocouples.png'], '-dpng');
 
   % find temperature unevenness at the beginning of the experiment
   p = polyfit(x, tc(1, :), 1);
-  fprintf('    %.2f deg C / cm at initial time\n', p(1));
-
+  fprintf('\tslope %.2f deg C / cm at initial time. Max difference %.2f deg C.\n', p(1), max(tc(1, :)) - min(tc(1, :)));
 end
+
+% % plot how alpha changes things (for steel)
+% time   = linspace(1, 10090, 1000); % seconds
+% x      = 4; % cm
+% alphas = [alpha*0.5, alpha, alpha*2];
+% figure; hold on; grid on;
+% for alpha = alphas
+%   plot(time, u(x/100, time, b, lambda, alpha, H, T0, 10))
+% end
+% legend('0.5\alpha', '\alpha', '2\alpha', 'location', 'southeast')
+% xlabel('time, seconds')
+% ylabel('temperature, degrees C');
+% title(sprintf('%s - temperature at x = %d cm over time', name, x))
