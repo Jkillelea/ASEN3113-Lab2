@@ -79,6 +79,7 @@ for i = 1:length(data_sets)
   ylabel('Temperature (C)');
   print(['graphs/', name, ' thermocouples.png'], '-dpng');
 
+  % see what value of alpha matches the data best
   figure; hold on; grid on;
   thermocouple = 4;
   xt = x(thermocouple);
