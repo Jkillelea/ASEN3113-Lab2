@@ -79,6 +79,23 @@ for i = 1:length(data_sets)
   ylabel('Temperature (C)');
   print(['graphs/', name, ' thermocouples.png'], '-dpng');
 
+  figure; hold on; grid on;
+  thermocouple = 4;
+  xt = x(thermocouple);
+  plot(t, tc(:, thermocouple), 'r', 'linewidth', 2, 'DisplayName', 'Experimental Data');
+  alpha_range = alpha*(0.3:0.1:1);
+  for alpha_i = alpha_range
+    plot(t, u(xt/100, t, b, lambda, alpha_i, H, T0, 10), ...
+          'DisplayName', sprintf('alpha %.1d', alpha_i))
+  end
+  legend('show', 'location', 'southeast')
+  xlabel('Time (seconds)');
+  ylabel('Temperature (C)');
+  title(sprintf('%s: Temperature Curve vs alpha', name))
+  print(['graphs/', name, ' vary_alpha.png'], '-dpng');
+
+
+
   % find temperature unevenness at the beginning of the experiment
   p = polyfit(x, tc(1, :), 1);
   fprintf('\tslope %.2f deg C / cm at initial time. Max difference %.2f deg C.\n', p(1), max(tc(1, :)) - min(tc(1, :)));
