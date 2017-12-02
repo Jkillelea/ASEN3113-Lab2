@@ -95,9 +95,8 @@ for i = 1:length(data_sets)
   title(sprintf('%s: Temperature Curve vs alpha', name))
   print(['graphs/', name, ' vary_alpha.png'], '-dpng');
 
-
-
   % find temperature unevenness at the beginning of the experiment
   p = polyfit(x, tc(1, :), 1);
-  fprintf('\tslope %.2f deg C / cm at initial time. Max difference %.2f deg C.\n', p(1), max(tc(1, :)) - min(tc(1, :)));
+  fprintf('\tslope %.2f deg C / cm at initial time. Max difference %.2f deg C.\n', ...
+          p(1), max(tc(1, :)) - min(tc(1, :)));
 end
